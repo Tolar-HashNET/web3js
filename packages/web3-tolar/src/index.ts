@@ -109,6 +109,11 @@ export class Tolar {
                 call: "tx_sendSignedTransaction",
                 params: 1,
             }),
+            new Method({
+                name: "getPastEvents",
+                call: "tol_getPastEvents",
+                params: 2,
+            }),
         ];
     }
 
@@ -133,5 +138,6 @@ interface Tx {
     gas_price: number;
     data: string;
     nonce: number;
+    network_id: number;
 }
 module.exports = Tolar;

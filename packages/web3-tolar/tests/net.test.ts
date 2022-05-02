@@ -4,7 +4,7 @@ import web3 from '../../web3';
 
 describe("Tolar net", function () {
     let _web3: any = new web3();
-    _web3.setProvider("https://tolar.dream-factory.hr");
+    _web3.setProvider("https://jsongw.stagenet.tolar.io");
     let tolar = _web3.tolar;
     let net = tolar.net;
     it("peerCount", async () => {
