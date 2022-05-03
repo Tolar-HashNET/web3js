@@ -67,5 +67,6 @@
         "@types/node": "^12.12.34",
         "definitelytyped-header-parser": "^1.0.1",
         "dtslint": "0.4.2"
-    }
+    },
+    "gitHead": "d65d558bb716e26aecfd8bff6882f489a8a1f98b"
 }
