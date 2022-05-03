@@ -1,6 +1,6 @@
 {
     "name": "web3-shh",
-    "version": "1.2.15",
+    "version": "1.2.20",
     "publishConfig": {
         "access": "public"
     },
@@ -16,10 +16,10 @@
     },
     "main": "src/index.js",
     "dependencies": {
-        "web3-core": "1.2.15",
-        "web3-core-method": "1.2.15",
-        "web3-core-subscriptions": "1.2.15",
-        "web3-net": "1.2.15"
+        "web3-core": "1.2.20",
+        "web3-core-method": "1.2.20",
+        "web3-core-subscriptions": "1.2.20",
+        "web3-net": "1.2.20"
     },
     "devDependencies": {
         "@types/node": "^12.12.5",

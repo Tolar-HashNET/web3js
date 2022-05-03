@@ -1,6 +1,6 @@
 {
     "name": "web3-core-subscriptions",
-    "version": "1.2.15",
+    "version": "1.2.20",
     "publishConfig": {
         "access": "public"
     },
@@ -18,7 +18,7 @@
     "dependencies": {
         "eventemitter3": "3.1.2",
         "underscore": "1.9.1",
-        "web3-core-helpers": "1.2.15"
+        "web3-core-helpers": "1.2.20"
     },
     "devDependencies": {
         "definitelytyped-header-parser": "^1.0.1",
