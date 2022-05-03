@@ -11,6 +11,9 @@
     "doc": "docs",
     "test": "test"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "bundlesize": [
     {
       "path": "./packages/web3/dist/web3.min.js",
