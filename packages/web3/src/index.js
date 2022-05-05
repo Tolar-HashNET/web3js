@@ -35,7 +35,7 @@ var Personal = require("web3-eth-personal");
 var Shh = require("web3-shh");
 var Bzz = require("web3-bzz");
 var utils = require("web3-utils");
-var Tolar = require("web3-tolar");
+var Tolar = require("@ijerkovic-tolar/web3-tolar");
 
 var Web3 = function Web3() {
     var _this = this;
