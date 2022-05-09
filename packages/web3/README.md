@@ -9,7 +9,7 @@ Please read the main [README][repo-readme] and [documentation][docs] for more.
 ### Node.js
 
 ```bash
-npm install @dreamfactoryhr/web3t
+npm install @tolar/web3
 ```
 
 ## Types
@@ -17,5 +17,5 @@ npm install @dreamfactoryhr/web3t
 All the TypeScript typings are placed in the `types` folder.
 
 [docs]: https://tolar-clients.kwiki.io/docs/web3js
-[repo]: https://github.com/dream-factory-code/web3.js
-[repo-readme]: https://github.com/dream-factory-code/web3.js/blob/1.x/README.md
+[repo]: https://github.com/Tolar-HashNET/web3js
+[repo-readme]: https://github.com/Tolar-HashNET/web3js/blob/master/packages/web3/README.md
