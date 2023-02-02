@@ -1,8 +1,8 @@
 # web3-tolar-accounts
 
-This is a sub-package of [@dreamfactoryhr/web3t][repo].
+This is a sub-package of [@tolar/web3][repo].
 
-This is the accounts package used in the `web3-tolar` package.
+This is the accounts package used in the `@tolar/web3-tolar` package.
 
 Please read the [documentation][docs] for more.
 
@@ -11,12 +11,12 @@ Please read the [documentation][docs] for more.
 ### Node.js
 
 ```bash
-npm install web3-tolar-accounts
+npm install @tolar/web3-tolar-accounts
 ```
 
 ### In the Browser
 
-Build running the following in the [@dreamfactoryhr/web3t][repo] repository:
+Build running the following in the [@tolar/web3][repo] repository:
 
 ```bash
 npm run-script build-all
@@ -29,7 +29,7 @@ This will expose the `Web3TolarAccounts` object on the window object.
 
 ```js
 // in node.js
-var Web3TolarAccounts = require("web3-tolar-accounts");
+var Web3TolarAccounts = require("@tolar/web3-tolar-accounts");
 
 var account = new Web3TolarAccounts("https://...");
 ```
@@ -39,5 +39,4 @@ var account = new Web3TolarAccounts("https://...");
 All the TypeScript typings are placed in the `types` folder.
 
 [docs]: https://tolar-clients.kwiki.io/docs/web3js
-[repo]: https://github.com/dream-factory-code/web3.js
-[repo-readme]: https://github.com/dream-factory-code/web3.js/blob/1.x/README.md
+[repo]: https://github.com/Tolar-HashNET/web3js
