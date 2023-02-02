@@ -8,7 +8,8 @@
     "main": "dist/index.js",
     "scripts": {
         "test": "tsc && mocha -r ts-node/register tests/**/*.test.ts",
-        "coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test"
+        "coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test",
+        "tsc": "tsc"
     },
     "author": "Toni Beverin",
     "license": "ISC",
@@ -16,7 +17,7 @@
         "underscore": "^1.10.2",
         "web3-core-method": "^1.2.9",
         "web3-net": "^1.2.9",
-        "web3-tolar-accounts": "^1.2.6-1"
+        "@tolar/web3-tolar-accounts": "^1.2.7"
     },
     "devDependencies": {
         "@types/chai": "^4.2.11",

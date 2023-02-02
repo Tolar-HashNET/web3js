@@ -1,9 +1,9 @@
-import { Method } from 'web3-core-method';
+import { Method } from "web3-core-method";
 
 var Method = require("web3-core-method");
 var _ = require("underscore");
 
-var Accounts = require("web3-tolar-accounts");
+var Accounts = require("@tolar/web3-tolar-accounts");
 
 export class TolarAccounts extends Accounts {
     methods: Method[] = [
