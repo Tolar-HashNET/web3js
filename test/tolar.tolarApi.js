@@ -1,6 +1,6 @@
 var Web3 = require('../packages/web3')
 var assert = require('assert');
-const { async } = require('regenerator-runtime');
+
 
 var blockByIndexOne;
 var blockByIndexWithTransaction;
@@ -366,5 +366,52 @@ function sleep(ms) {
                 assert.equal(err.message, "Returned error: gRPC error code: 3; message: Transaction receipt with that hash doesn't exist; details: ");
             }
         })
+
+        it('get transaction receipt with empty string as transaction hash', async function(){
+            try{
+                await web3.tolar.getTransactionReceipt("");
+            }
+            catch(err){
+                assert.equal(err.message, "Returned error: Transaction hash parameter not in valid format");
+            }
+        })
+
+        it('get transaction receipt without hash parameter', async function(){
+            try{
+                await web3.tolar.getTransactionReceipt();
+            }
+            catch(err){
+                assert.equal(err.message, 'Invalid number of parameters for "getTransactionReceipt". Got 0 expected 1!');
+            }
+        })
+
+        it('get transaction receipt with invalid data type as hash', async function(){
+            try{
+                await web3.tolar.getTransactionReceipt(123);
+            }
+            catch(err){
+                assert.equal(err.message, 'Returned error: invalid parameter: must be string, but is unsigned integer for parameter "transaction_hash"');
+            }
+        })
+
+        it('get transaction receipt for transactoin hash which contains logs',async function(){
+            const transactionReceipt = await web3.tolar.getTransactionReceipt("c3118d3742b8224809a2b7949e88556f9e5af2042ef6328d70c5db6585db05af");
+
+
+            assert.equal(transactionReceipt.block_hash, "2fb1404b618f4ae0903ebd69798edee4a1a0d6f92c8971629db9c030c723cd29", "Block hash is not valid");
+            assert.equal(transactionReceipt.block_number, 50442, "Block number is not valid");
+            assert.equal(transactionReceipt.excepted, false, "Excepted should be false");
+            assert.equal(transactionReceipt.gas_used, "22859", "Gas used is not valid");
+            assert.equal(transactionReceipt.logs[0].address, "54d41dfb580da8053d97a91227da9f2adc5a0376962f0f71d7", "Logs address is not valid");
+            assert.equal(transactionReceipt.logs[0].data, "30303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303031", "Data is not valid");
+            assert.equal(transactionReceipt.new_address, "54000000000000000000000000000000000000000023199e2b", "New address is not valid");
+            assert.equal(transactionReceipt.receiver_address, "54d41dfb580da8053d97a91227da9f2adc5a0376962f0f71d7", "Receiver address is not valid");
+            assert.equal(transactionReceipt.sender_address, "5412c347d6570bcdde3a89fca489f679b8b0ca22a5d4e3b6ca", "Sender address is not valid");
+            assert.equal(transactionReceipt.transaction_hash, "c3118d3742b8224809a2b7949e88556f9e5af2042ef6328d70c5db6585db05af", "Transaction hash is not valid");
+            assert.equal(transactionReceipt.transaction_index, 0, "Transaction index should be 0");
+
+            console.log(transactionReceipt.logs[0].topics);
+        })
+        
 
     });
