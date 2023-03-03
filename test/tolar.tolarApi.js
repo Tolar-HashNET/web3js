@@ -256,7 +256,7 @@ function sleep(ms) {
                 assert.equal(transactionList.transactions.length, 1, "There should be only one transaction in the list");
         })
 
-        it.skip('get nonce for valid address which is not registered on blockchain', async function(){
+        it('get nonce for valid address which is not registered on blockchain', async function(){
             const nonce = await web3.tolar.getNonce("54465F9c26960d2240054175f4C733be805bEb8C3E2320890a");
 
             assert.equal(nonce, 115792089237316195423570985008687907853269984665640564039457584007913129639935, "Nonce is not valid");
@@ -394,7 +394,7 @@ function sleep(ms) {
             }
         })
 
-        it('get transaction receipt for transactoin hash which contains logs',async function(){
+        it('get transaction receipt for transaction hash which contains logs',async function(){
             const transactionReceipt = await web3.tolar.getTransactionReceipt("c3118d3742b8224809a2b7949e88556f9e5af2042ef6328d70c5db6585db05af");
 
 
@@ -404,14 +404,263 @@ function sleep(ms) {
             assert.equal(transactionReceipt.gas_used, "22859", "Gas used is not valid");
             assert.equal(transactionReceipt.logs[0].address, "54d41dfb580da8053d97a91227da9f2adc5a0376962f0f71d7", "Logs address is not valid");
             assert.equal(transactionReceipt.logs[0].data, "30303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303031", "Data is not valid");
+            assert.equal(transactionReceipt.logs[0].topics[0], "8c274d7c08aed08867bfb2dd79467ef65d24737515bd587ea658bdde878c5dc2", "First topic is not correct");
+            assert.equal(transactionReceipt.logs[0].topics[1], "00000000000000000000000012c347d6570bcdde3a89fca489f679b8b0ca22a5", "Second topic is not correct");
             assert.equal(transactionReceipt.new_address, "54000000000000000000000000000000000000000023199e2b", "New address is not valid");
             assert.equal(transactionReceipt.receiver_address, "54d41dfb580da8053d97a91227da9f2adc5a0376962f0f71d7", "Receiver address is not valid");
             assert.equal(transactionReceipt.sender_address, "5412c347d6570bcdde3a89fca489f679b8b0ca22a5d4e3b6ca", "Sender address is not valid");
             assert.equal(transactionReceipt.transaction_hash, "c3118d3742b8224809a2b7949e88556f9e5af2042ef6328d70c5db6585db05af", "Transaction hash is not valid");
-            assert.equal(transactionReceipt.transaction_index, 0, "Transaction index should be 0");
-
-            console.log(transactionReceipt.logs[0].topics);
+            assert.equal(transactionReceipt.transaction_index, 0, "Transaction index should be 0");            
         })
-        
 
+        it('get gas estimation for valid values', async function(){
+            const gasEstimation = await web3.tolar.getGasEstimate("5412c347d6570bcdde3a89fca489f679b8b0ca22a5d4e3b6ca","54d41dfb580da8053d97a91227da9f2adc5a0376962f0f71d7", "20", "21000", "1", "", "0", 3);
+
+            assert.equal(gasEstimation, 21111);
+        })
+
+        it('get gas estimation for empty sender_address field', async function(){
+            try{
+                await web3.tolar.getGasEstimate("","54d41dfb580da8053d97a91227da9f2adc5a0376962f0f71d7", "20", "21000", "1", "", "1", 3);
+            }
+            catch(err){
+                assert.equal(err.message, "Returned error: Sender address not in valid format");
+            }
+        })
+
+        it('get gas estimation for empty receiver_address field', async function(){
+            try{
+                await web3.tolar.getGasEstimate("54d41dfb580da8053d97a91227da9f2adc5a0376962f0f71d7","", "20", "21000", "1", "", "1", 3);
+            }
+            catch(err){
+                assert.equal(err.message, "Returned error: Receiver address not in valid format");
+            }
+        })
+
+        it('get gas estimation for empty amount field', async function(){
+            try{
+                await web3.tolar.getGasEstimate("5412c347d6570bcdde3a89fca489f679b8b0ca22a5d4e3b6ca","54d41dfb580da8053d97a91227da9f2adc5a0376962f0f71d7", "", "21000", "1", "", "1", 3);
+            }
+            catch(err){
+                assert.equal(err.message, "Returned error: Amount is not in valid format");
+            }
+        })
+
+        it('get gas estimation for empty gas field', async function(){
+            try{
+                await web3.tolar.getGasEstimate("5412c347d6570bcdde3a89fca489f679b8b0ca22a5d4e3b6ca","54d41dfb580da8053d97a91227da9f2adc5a0376962f0f71d7", "20", "", "1", "", "1", 3);
+            }
+            catch(err){
+                assert.equal(err.message, "Returned error: Gas is not in valid format");
+            }
+        })
+
+        it('get gas estimation for empty gas_price field', async function(){
+            try{
+                await web3.tolar.getGasEstimate("5412c347d6570bcdde3a89fca489f679b8b0ca22a5d4e3b6ca","54d41dfb580da8053d97a91227da9f2adc5a0376962f0f71d7", "20", "21000", "", "", "1", 3);
+            }
+            catch(err){
+                assert.equal(err.message, "Returned error: Gas price is not in valid format");
+            }
+        })
+
+        it('get gas estimation for empty nonce field', async function(){
+            try{
+                await web3.tolar.getGasEstimate("5412c347d6570bcdde3a89fca489f679b8b0ca22a5d4e3b6ca","54d41dfb580da8053d97a91227da9f2adc5a0376962f0f71d7", "20", "21000", "1", "", "", 3);
+            }
+            catch(err){
+                assert.equal(err.message, "Returned error: Nonce is not in valid format");
+            }
+        })
+
+        it('get gas estimation with one missing field', async function(){
+            try{
+                await web3.tolar.getGasEstimate("5412c347d6570bcdde3a89fca489f679b8b0ca22a5d4e3b6ca","54d41dfb580da8053d97a91227da9f2adc5a0376962f0f71d7", "20", "21000", "1", "", "1");
+            }
+            catch(err){
+                assert.equal(err.message, 'Invalid number of parameters for "getGasEstimate". Got 7 expected 8!');
+            }
+        })
+
+        it('get gas estimation with non-hex data field', async function(){
+            try{
+                await web3.tolar.getGasEstimate("5412c347d6570bcdde3a89fca489f679b8b0ca22a5d4e3b6ca","54d41dfb580da8053d97a91227da9f2adc5a0376962f0f71d7", "20", "21000", "1", "test", "1", 3);
+            }
+            catch(err){
+                assert.equal(err.message, 'Returned error: Data is not in hex format');
+            }
+        })
+
+        it('get gas estimation with valid hex data field', async function(){
+            const gasEstimation = await web3.tolar.getGasEstimate("5412c347d6570bcdde3a89fca489f679b8b0ca22a5d4e3b6ca","54d41dfb580da8053d97a91227da9f2adc5a0376962f0f71d7", "20", "21000", "1", "0x6060604052341561000f57600080fd5b5b6101df8061001f6000396000f300606060405263ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166321c80154811461005357806343b267321461007b57806358f19417146100a3575b600080fd5b341561005e57600080fd5b6100696004356100cb565b60405190815260200160405180910390f35b341561008657600080fd5b610069600435610152565b60405190815260200160405180910390f35b34156100ae57600080fd5b61006960043561015c565b60405190815260200160405180910390f35b6000813373ffffffffffffffffffffffffffffffffffffffff167f324591e46c0cd422e42a223fbdaf9117beefd35b5f20a2b908afff711bd55bee60405160208082526005908201527f65787472610000000000000000000000000000000000000000000000000000006040808301919091526060909101905180910390a350805b919050565b600a81015b919050565b60003373ffffffffffffffffffffffffffffffffffffffff167f8c274d7c08aed08867bfb2dd79467ef65d24737515bd587ea658bdde878c5dc28360405190815260200160405180910390a250600281025b9190505600a165627a7a723058204d8659074227b1dba75176623ef1562509bcd04240164f5427a5aed90ef52e910029", "1", 3);
+            
+            assert.equal(gasEstimation, 28311);
+        })
+
+        it('get gas estimation with invalid sender_address field', async function(){
+            try{
+                await web3.tolar.getGasEstimate("5412c347d6570bcdde3a89fca489f679b8b0ca22a5d4e3b6cb","54d41dfb580da8053d97a91227da9f2adc5a0376962f0f71d7", "20", "21000", "1", "", "1", 3);
+            }
+            catch(err){
+                assert.equal(err.message, 'Returned error: Sender address not in valid format');
+            }
+        })
+
+        it('get gas estimation with invalid receiver_address field', async function(){
+            try{
+                await web3.tolar.getGasEstimate("5412c347d6570bcdde3a89fca489f679b8b0ca22a5d4e3b6ca","54d41dfb580da8053d97a91227da9f2adc5a0376962f0f71d8", "20", "21000", "1", "", "1", 3);
+            }
+            catch(err){
+                assert.equal(err.message, 'Returned error: Receiver address not in valid format');
+            }
+        })
+
+        it('get gas estimation with amount as integer', async function(){
+            try{
+                await web3.tolar.getGasEstimate("5412c347d6570bcdde3a89fca489f679b8b0ca22a5d4e3b6ca","54d41dfb580da8053d97a91227da9f2adc5a0376962f0f71d7", 20, "21000", "1", "", "1", 3);
+            }
+            catch(err){
+                assert.equal(err.message, 'Returned error: invalid parameter: must be string, but is unsigned integer for parameter "amount"');
+            }
+        })
+
+        it('get gas estimation with gas as integer', async function(){
+            try{
+                await web3.tolar.getGasEstimate("5412c347d6570bcdde3a89fca489f679b8b0ca22a5d4e3b6ca","54d41dfb580da8053d97a91227da9f2adc5a0376962f0f71d7", "20", 21000, "1", "", "1", 3);
+            }
+            catch(err){
+                assert.equal(err.message, 'Returned error: invalid parameter: must be string, but is unsigned integer for parameter "gas"');
+            }
+        })
+
+        it('get gas estimation with gas price as integer', async function(){
+            try{
+                await web3.tolar.getGasEstimate("5412c347d6570bcdde3a89fca489f679b8b0ca22a5d4e3b6ca","54d41dfb580da8053d97a91227da9f2adc5a0376962f0f71d7", "20", "21000", 1, "", "1", 3);
+            }
+            catch(err){
+                assert.equal(err.message, 'Returned error: invalid parameter: must be string, but is unsigned integer for parameter "gas_price"');
+            }
+        })
+
+        it('get gas estimation with nonce as integer', async function(){
+            try{
+                await web3.tolar.getGasEstimate("5412c347d6570bcdde3a89fca489f679b8b0ca22a5d4e3b6ca","54d41dfb580da8053d97a91227da9f2adc5a0376962f0f71d7", "20", "21000", "1", "", 1, 3);
+            }
+            catch(err){
+                assert.equal(err.message, 'Returned error: invalid parameter: must be string, but is unsigned integer for parameter "nonce"');
+            }
+        })
+
+        it('get gas estimation for zero as amount, gas and gas_price', async function(){
+            const gasEstimation = await web3.tolar.getGasEstimate("5412c347d6570bcdde3a89fca489f679b8b0ca22a5d4e3b6ca","54d41dfb580da8053d97a91227da9f2adc5a0376962f0f71d7", "0", "0", "0", "", "0", 3);
+
+            assert.equal(gasEstimation, 21111);
+        })
+
+        it('get gas estimation for string as network_id parameter', async function(){
+            try{
+                await web3.tolar.getGasEstimate("5412c347d6570bcdde3a89fca489f679b8b0ca22a5d4e3b6ca","54d41dfb580da8053d97a91227da9f2adc5a0376962f0f71d7", "0", "0", "0", "", "0", "3");
+            }
+            catch(err){
+                assert.equal(err.message, 'Returned error: invalid parameter: must be unsigned integer, but is string for parameter "network_id"');
+            }
+        })
+
+        it('try call transaction with valid values', async function(){
+            const tryCallTransaction = await web3.tolar.tryCallTransaction("5412c347d6570bcdde3a89fca489f679b8b0ca22a5d4e3b6ca", "54120f548e3f68a66158a653c4b0d5ede3a6f0bd5da7c8cf8a", "20", "21000", "1", "", "1", 3);
+
+            assert.equal(tryCallTransaction.excepted, false, "Excepted should be false");
+            assert.equal(tryCallTransaction.output, '', "Output should be empty");
+        })
+
+        it('try call transaction with invalid sender address', async function(){
+            try{
+                await web3.tolar.tryCallTransaction("5412c347d6570bcdde3a89fca489f679b8b0ca22a5d4e3b6cb", "54120f548e3f68a66158a653c4b0d5ede3a6f0bd5da7c8cf8a", "20", "21000", "1", "", "1", 3);
+            }
+            catch(err){
+                assert.equal(err.message, "Returned error: Sender address not in valid format");
+            }
+        })
+
+        it('try call transaction with invalid receiver address', async function(){
+            try{
+                await web3.tolar.tryCallTransaction("5412c347d6570bcdde3a89fca489f679b8b0ca22a5d4e3b6ca", "54120f548e3f68a66158a653c4b0d5ede3a6f0bd5da7c8cf8b", "20", "21000", "1", "", "1", 3);
+            }
+            catch(err){
+                assert.equal(err.message, "Returned error: Receiver address not in valid format");
+            }
+        })
+
+        it('try call transaction with amount as integer', async function(){
+            try{
+                await web3.tolar.tryCallTransaction("5412c347d6570bcdde3a89fca489f679b8b0ca22a5d4e3b6ca", "54120f548e3f68a66158a653c4b0d5ede3a6f0bd5da7c8cf8a", 20, "21000", "1", "", "1", 3);
+            }
+            catch(err){
+                assert.equal(err.message, 'Returned error: invalid parameter: must be string, but is unsigned integer for parameter "amount"');
+            }
+        })
+
+        it('try call transaction with gas as integer', async function(){
+            try{
+                await web3.tolar.tryCallTransaction("5412c347d6570bcdde3a89fca489f679b8b0ca22a5d4e3b6ca", "54120f548e3f68a66158a653c4b0d5ede3a6f0bd5da7c8cf8a", "20", 21000, "1", "", "1", 3);
+            }
+            catch(err){
+                assert.equal(err.message, 'Returned error: invalid parameter: must be string, but is unsigned integer for parameter "gas"');
+            }
+        })
+
+        it('try call transaction with gas price as integer', async function(){
+            try{
+                await web3.tolar.tryCallTransaction("5412c347d6570bcdde3a89fca489f679b8b0ca22a5d4e3b6ca", "54120f548e3f68a66158a653c4b0d5ede3a6f0bd5da7c8cf8a", "20", "21000", 1, "", "1", 3);
+            }
+            catch(err){
+                assert.equal(err.message, 'Returned error: invalid parameter: must be string, but is unsigned integer for parameter "gas_price"');
+            }
+        })
+
+        it('try call transaction with nonce as integer', async function(){
+            try{
+                await web3.tolar.tryCallTransaction("5412c347d6570bcdde3a89fca489f679b8b0ca22a5d4e3b6ca", "54120f548e3f68a66158a653c4b0d5ede3a6f0bd5da7c8cf8a", "20", "21000", "1", "", 1, 3);
+            }
+            catch(err){
+                assert.equal(err.message, 'Returned error: invalid parameter: must be string, but is unsigned integer for parameter "nonce"');
+            }
+        })
+
+        it('try call transaction with one missing field', async function(){
+            try{
+                await web3.tolar.tryCallTransaction("5412c347d6570bcdde3a89fca489f679b8b0ca22a5d4e3b6ca", "54120f548e3f68a66158a653c4b0d5ede3a6f0bd5da7c8cf8a", "20", "21000", "1", "", "1");
+            }
+            catch(err){
+                assert.equal(err.message, 'Invalid number of parameters for "tryCallTransaction". Got 7 expected 8!');
+            }
+        })
+
+        it('try call transaction with valid contract method call without enough gas provided', async function(){
+            const tryCallTransaction = await web3.tolar.tryCallTransaction("5412c347d6570bcdde3a89fca489f679b8b0ca22a5d4e3b6ca", "54d41dfb580da8053d97a91227da9f2adc5a0376962f0f71d7", "0", "21000", "1", "21c801540000000000000000000000000000000000000000000000000000000000000008", "1", 3);
+
+            assert.equal(tryCallTransaction.excepted, true);
+            assert.equal(tryCallTransaction.output, '4f75744f66476173496e7472696e736963');
+        })
+
+        it('try call transaction with valid contract method call with gas_price set to zero', async function(){
+            const tryCallTransaction = await web3.tolar.tryCallTransaction("5412c347d6570bcdde3a89fca489f679b8b0ca22a5d4e3b6ca", "54d41dfb580da8053d97a91227da9f2adc5a0376962f0f71d7", "0", "21000", "0", "21c801540000000000000000000000000000000000000000000000000000000000000008", "1", 3);
+
+            assert.equal(tryCallTransaction.excepted, true);
+            assert.equal(tryCallTransaction.output, '4f75744f66476173496e7472696e736963');
+        })
+
+        it('try call transaction with valid contract method call with enough gas provided', async function(){
+            const tryCallTransaction = await web3.tolar.tryCallTransaction("5412c347d6570bcdde3a89fca489f679b8b0ca22a5d4e3b6ca", "54d41dfb580da8053d97a91227da9f2adc5a0376962f0f71d7", "0", "210000", "1", "21c801540000000000000000000000000000000000000000000000000000000000000008", "1", 3);
+
+            assert.equal(tryCallTransaction.excepted, false);
+            assert.equal(tryCallTransaction.output, '0000000000000000000000000000000000000000000000000000000000000008');
+        })
+
+        it('try call transaction with valid contract deployment bytecode with enough gas provided', async function(){
+            const tryCallTransaction = await web3.tolar.tryCallTransaction("5412c347d6570bcdde3a89fca489f679b8b0ca22a5d4e3b6ca", "54d41dfb580da8053d97a91227da9f2adc5a0376962f0f71d7", "0", "210000", "1", "0x606060405263ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166321c80154811461005357806343b267321461007b57806358f19417146100a3575b600080fd5b341561005e57600080fd5b6100696004356100cb565b60405190815260200160405180910390f35b341561008657600080fd5b610069600435610152565b60405190815260200160405180910390f35b34156100ae57600080fd5b61006960043561015c565b60405190815260200160405180910390f35b6000813373ffffffffffffffffffffffffffffffffffffffff167f324591e46c0cd422e42a223fbdaf9117beefd35b5f20a2b908afff711bd55bee60405160208082526005908201527f65787472610000000000000000000000000000000000000000000000000000006040808301919091526060909101905180910390a350805b919050565b600a81015b919050565b60003373ffffffffffffffffffffffffffffffffffffffff167f8c274d7c08aed08867bfb2dd79467ef65d24737515bd587ea658bdde878c5dc28360405190815260200160405180910390a250600281025b9190505600a165627a7a723058204d8659074227b1dba75176623ef1562509bcd04240164f5427a5aed90ef52e910029", "1", 3);
+
+            assert.equal(tryCallTransaction.excepted, true);
+            assert.equal(tryCallTransaction.output, '526576657274496e737472756374696f6e');
+        })
     });

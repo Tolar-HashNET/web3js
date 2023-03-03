@@ -1,7 +1,7 @@
 var Web3 = require('../packages/web3')
 var assert = require('assert');
 
-    describe('tolar network API', function() {
+    describe('tolar Network API', function() {
         before(async function() {
             web3 = new Web3('https://jsongw.stagenet.tolar.io/jsonrpc');
         })
