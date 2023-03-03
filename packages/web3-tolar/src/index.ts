@@ -82,7 +82,7 @@ export class Tolar {
             new Method({
                 name: "tryCallTransaction",
                 call: "tol_tryCallTransaction",
-                params: 7,
+                params: 8,
             }),
             new Method({
                 name: "getTransactionReceipt",
@@ -92,7 +92,7 @@ export class Tolar {
             new Method({
                 name: "getGasEstimate",
                 call: "tol_getGasEstimate",
-                params: 1,
+                params: 8,
             }),
             new Method({
                 name: "getHashBytes",
