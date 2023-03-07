@@ -14,7 +14,7 @@ function sleep(ms) {
             web3 = new Web3('https://jsongw.stagenet.tolar.io/jsonrpc');
         })
 
-        it.skip('check block count', async function(){
+        it('check block count', async function(){
             const blockCount = await web3.tolar.getBlockCount();
 
             await sleep(30000);
@@ -663,4 +663,77 @@ function sleep(ms) {
             assert.equal(tryCallTransaction.excepted, true);
             assert.equal(tryCallTransaction.output, '526576657274496e737472756374696f6e');
         })
+
+        it('get balance for valid address', async function(){
+            let balance = await web3.tolar.getBalance("54120f548e3f68a66158a653c4b0d5ede3a6f0bd5da7c8cf8a", 2000);
+            assert.equal(balance.balance, 0);
+
+            balance = await web3.tolar.getBalance("54120f548e3f68a66158a653c4b0d5ede3a6f0bd5da7c8cf8a", 64525);
+            assert.equal(balance.balance, 20000000000000);
+
+            balance = await web3.tolar.getBalance("54120f548e3f68a66158a653c4b0d5ede3a6f0bd5da7c8cf8a", 64535);
+            assert.equal(balance.balance, 20000000000000);
+
+            balance = await web3.tolar.getBalance("54120f548e3f68a66158a653c4b0d5ede3a6f0bd5da7c8cf8a", 64536);
+            assert.equal(balance.balance, 30000000000000);
+        })
+
+        it('get balance for invalid address', async function(){
+
+        try {
+            await web3.tolar.getBalance("54120f548e3f68a66158a653c4b0d5ede3a6f0bd5da7c8cf8b", 2000);
+        }
+        catch(err){
+            assert.equal(err.message, "Returned error: Address not in valid format");
+        }
+        })
+
+        it('get balance for missing block_index parameter', async function(){
+            
+            try {
+                await web3.tolar.getBalance("54120f548e3f68a66158a653c4b0d5ede3a6f0bd5da7c8cf8a");
+            }
+            catch(err){
+                assert.equal(err.message, 'Invalid number of parameters for "getBalance". Got 1 expected 2!');
+            }
+            })
+
+        it('get balance for block_index as string', async function(){
+        
+            try {
+                await web3.tolar.getBalance("54120f548e3f68a66158a653c4b0d5ede3a6f0bd5da7c8cf8a", "20000");
+            }
+            catch(err){
+                assert.equal(err.message, 'Returned error: invalid parameter: must be unsigned integer, but is string for parameter "block_index"');
+            }
+            })
+
+        it('get balance on block with index 0 - gets latest balance', async function(){
+            let balance = await web3.tolar.getBalance("54120f548e3f68a66158a653c4b0d5ede3a6f0bd5da7c8cf8a", 0);
+
+            assert.equal(balance.balance, 30000000000000);
+        })
+
+        it('get balance on block with negative index', async function(){
+            try{
+                await web3.tolar.getBalance("54120f548e3f68a66158a653c4b0d5ede3a6f0bd5da7c8cf8a", -1);
+            }
+            catch(err){
+                assert.equal(err.message, 'Returned error: invalid parameter: must be unsigned integer, but is integer for parameter "block_index"');
+            }
+
+        })
+
+        it('get balance on block_index as hex value', async function(){
+            try{
+                await web3.tolar.getBalance("54120f548e3f68a66158a653c4b0d5ede3a6f0bd5da7c8cf8a", 0x255);
+            }
+            catch(err){
+                assert.equal(err.message, 'Returned error: invalid parameter: must be unsigned integer, but is integer for parameter "block_index"');
+            }
+
+        })
+        
+
+
     });
