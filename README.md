@@ -16,7 +16,7 @@ Please read the [documentation][docs] for more.
 ### Node
 
 ```bash
-npm install @dreamfactoryhr/web3t
+npm install @tolar/web3
 ```
 
 ### In the Browser
@@ -35,7 +35,7 @@ This will expose `Web3` on the window object.
 
 ```js
 // in node.js
-var Web3 = require('@dreamfactoryhr/web3t');
+var Web3 = require('@tolar/web3');
 
 var web3 = new Web3('https://...');
 console.log(web3);
