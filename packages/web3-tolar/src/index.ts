@@ -82,7 +82,7 @@ export class Tolar {
             new Method({
                 name: "tryCallTransaction",
                 call: "tol_tryCallTransaction",
-                params: 7,
+                params: 8,
             }),
             new Method({
                 name: "getTransactionReceipt",
@@ -92,7 +92,7 @@ export class Tolar {
             new Method({
                 name: "getGasEstimate",
                 call: "tol_getGasEstimate",
-                params: 1,
+                params: 8,
             }),
             new Method({
                 name: "getHashBytes",
@@ -108,6 +108,11 @@ export class Tolar {
                 name: "sendSignedTransaction",
                 call: "tx_sendSignedTransaction",
                 params: 1,
+            }),
+            new Method({
+                name: "getPastEvents",
+                call: "tol_getPastEvents",
+                params: 2,
             }),
         ];
     }
@@ -133,5 +138,6 @@ interface Tx {
     gas_price: number;
     data: string;
     nonce: number;
+    network_id: number;
 }
 module.exports = Tolar;

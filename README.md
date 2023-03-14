@@ -16,7 +16,7 @@ Please read the [documentation][docs] for more.
 ### Node
 
 ```bash
-npm install @dreamfactoryhr/web3t
+npm install @tolar/web3
 ```
 
 ### In the Browser
@@ -35,7 +35,7 @@ This will expose `Web3` on the window object.
 
 ```js
 // in node.js
-var Web3 = require('@dreamfactoryhr/web3t');
+var Web3 = require('@tolar/web3');
 
 var web3 = new Web3('https://...');
 console.log(web3);
@@ -94,9 +94,21 @@ Documentation can be found at [ReadTheDocs][docs].
 
 ```bash
 sudo apt-get update
-sudo apt-get install nodejs
 sudo apt-get install npm
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh - installs nvm
+nvm install 14.15.1
+nvm use 14.15.1 - this is the latest working version compatible with our packages
+npm install
 ```
+
+### Exceptions
+"ERR! stack Error: `make` failed with exit code: 2" - delete package-lock file inside your project root and run npm install again
+"Error: Cannot find module '/home/mario/PycharmProjects/web3jss/packages/web3-tolar/dist/index.js' from '/home/mario/PycharmProjects/web3jss'" - go to packages/web3-tolar and npm run tsc
+"npm ERR! gyp info find Python using Python version 2.7.18 found at "/usr/bin/python2"
+ npm ERR! gyp ERR! UNCAUGHT EXCEPTION
+ npm ERR! gyp ERR! stack TypeError: Cannot assign to read only property 'cflags' of object '#<Object>'" - make sure to use Python3 instead of Python2
+"Error: Cannot find module '@grpc/grpc-js'" - run "npm install @grpc/grpc-js" from your root folder
+
 
 ### Building (gulp)
 

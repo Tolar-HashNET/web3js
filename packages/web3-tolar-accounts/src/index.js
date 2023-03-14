@@ -22,6 +22,7 @@
 
 "use strict";
 
+var heleperUtil = require("./helpers/util");
 var _ = require("underscore");
 var core = require("web3-core");
 var Method = require("web3-core-method");
@@ -52,7 +53,6 @@ var Accounts = function Accounts() {
         let ethAddressToTolarAddress = (ethAddress) => {
             const prefix = "T";
             const prefixHex = utils.toHex(prefix).substr(2);
-
             const addressHash = utils.soliditySha3(ethAddress);
             const hashOfHash = utils.soliditySha3(addressHash);
             const tolarAddress =
@@ -177,41 +177,48 @@ Accounts.prototype.privateKeyToAccount = function privateKeyToAccount(
 
     return this._addAccountFunctions(Account.fromPrivate(privateKey));
 };
+
 Accounts.prototype.signTransaction = async function signTransaction(
     tx,
-    privateKey,
-    callback
+    privateKey
 ) {
-    //callback = callback || function () {};
     try {
-        const txHash = await this.getHashHex(tx);
+        /**Getting the transaction's body */
+        const transactionBody = new heleperUtil.tx.msg.Transaction()
+            .setSenderAddress(Buffer.from(tx.sender_address, "utf8"))
+            .setReceiverAddress(Buffer.from(tx.receiver_address, "utf8"))
+            .setValue(heleperUtil.toU256(tx.amount))
+            .setGas(heleperUtil.toU256(tx.gas))
+            .setGasPrice(heleperUtil.toU256(tx.gas_price))
+            .setData(Buffer.from(tx.data, "utf-8"))
+            .setNonce(heleperUtil.toU256(tx.nonce))
+            .setNetworkId(tx.network_id);
 
-        const signature = this.privateKeyToAccount(privateKey).sign(
-            "0x" + txHash,
-            privateKey
-        );
-        let toFixedHexPlaces = (hex, places) => {
-            hex = hex.replace(/^0x/, "");
-            while (hex.length < places) {
-                hex = "0" + hex;
-            }
-            return hex;
-        };
-        const signedTx = {
-            body: tx,
-            sig_data: {
-                hash: txHash,
-                signature:
-                    signature.r.substr(2) +
-                    signature.s.substr(2) +
-                    toFixedHexPlaces(signature.v, 2),
-                signer_id: signature.signer_id,
-            },
-        };
-        //callback(null, signedTx);
-        return signedTx;
+        /**Calculating the hash of the transaction's body */
+        const transactionBodyHash =
+            heleperUtil.calculateTransactionHash(transactionBody);
+
+        const ethSinature = this.sign(`0x${transactionBodyHash}`, privateKey);
+        const signature = `${ethSinature.r.slice(2)}${ethSinature.s.slice(
+            2
+        )}${heleperUtil.toFixedHexPlaces(ethSinature.v, 2)}`;
+
+        const signatureData = new heleperUtil.common.msg.SignatureData()
+            .setHash(Buffer.from(transactionBodyHash, "utf8"))
+            .setSignature(Buffer.from(signature, "utf-8"))
+            .setSignerId(Buffer.from(ethSinature.signer_id, "utf8"));
+
+        const signedTransaction = new heleperUtil.tx.msg.SignedTransaction()
+            .setBody(transactionBody)
+            .setSigData(signatureData);
+
+        const signedTransactionHex = Buffer.from(
+            signedTransaction.serializeBinary()
+        ).toString("hex");
+
+        return signedTransactionHex;
     } catch (e) {
-        //callback(e);
+        return e;
     }
 };
 

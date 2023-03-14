@@ -1,11 +1,15 @@
 {
-    "name": "web3-tolar",
-    "version": "1.0.5",
+    "name": "@tolar/web3-tolar",
+    "version": "1.0.8",
+    "publishConfig": {
+        "access": "public"
+    },
     "description": "Adapter for tolar",
     "main": "dist/index.js",
     "scripts": {
         "test": "tsc && mocha -r ts-node/register tests/**/*.test.ts",
-        "coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test"
+        "coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test",
+        "tsc": "tsc"
     },
     "author": "Toni Beverin",
     "license": "ISC",
@@ -13,7 +17,7 @@
         "underscore": "^1.10.2",
         "web3-core-method": "^1.2.9",
         "web3-net": "^1.2.9",
-        "web3-tolar-accounts": "^1.2.6-1"
+        "@tolar/web3-tolar-accounts": "^1.2.7"
     },
     "devDependencies": {
         "@types/chai": "^4.2.11",
@@ -24,5 +28,13 @@
         "nyc": "^15.0.1",
         "ts-node": "^8.8.2",
         "typescript": "^3.8.3"
-    }
+    },
+    "directories": {
+        "test": "tests"
+    },
+    "keywords": [
+        "web3",
+        "solidity",
+        "tolar"
+    ]
 }
